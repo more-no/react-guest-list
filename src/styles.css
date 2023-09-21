@@ -1,0 +1,19 @@
+.container {
+  display: flex;
+  justify-content: space-evenly;
+  margin: 3rem;
+}
+
+.frame {
+  border: 10px solid rgb(97, 97, 97);
+  border-radius: 20px;
+  padding: 20px;
+  max-width: 80%;
+}
+
+.list {
+  border: 10px solid rgb(97, 97, 97);
+  border-radius: 20px;
+  padding: 20px;
+  max-width: 80%;
+}
