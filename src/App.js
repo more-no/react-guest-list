@@ -11,7 +11,7 @@ export default function App() {
   const [guestLastName, setGuestLastName] = useState('');
   const [guestList, setGuestList] = useState(allGuests);
 
-  /* ********** inizio funzione loading ********** */
+  /* ********** loading function ********** */
 
   useEffect(() => {
     const firstRenderFetch = async () => {
@@ -27,7 +27,9 @@ export default function App() {
       }
     };
 
-    firstRenderFetch();
+    firstRenderFetch().catch((error) => {
+      console.error('Error during initial fetch:', error);
+    });
   }, []); // triggers only on first render
 
   if (isLoading) {
@@ -42,9 +44,9 @@ export default function App() {
     );
   }
 
-  /* ********** fine funzione loading ********** */
+  /* ********** end loading function ********** */
 
-  /* ********** inizio funzione add guest ********** */
+  /* ********** add guest function ********** */
 
   async function handleNewGuest() {
     // Create the guest data
@@ -84,9 +86,9 @@ export default function App() {
     setGuestLastName('');
   }
 
-  /* ********** fine funzione add guest ********** */
+  /* ********** end add guest function ********** */
 
-  /* ********** inizio funzione change status ********** */
+  /* ********** change status function ********** */
 
   async function handleChangeStatus(id) {
     // Find the guest in the guestList
@@ -120,7 +122,7 @@ export default function App() {
     setGuestList(updatedGuestList);
   }
 
-  /* ********** fine funzione change status ********** */
+  /* ********** edn change status function ********** */
 
   const handleInputFirstName = (event) => {
     setGuestFirstName(event.target.value);
@@ -188,7 +190,7 @@ export default function App() {
                     <input
                       type="checkbox"
                       checked={value.attending}
-                      onChange={(e) => handleChangeStatus(value.id)}
+                      onChange={() => handleChangeStatus(value.id)}
                     />
                   </label>
                 </form>
