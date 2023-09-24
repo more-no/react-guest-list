@@ -34,13 +34,13 @@ export default function App() {
 
   if (isLoading) {
     return (
-      <h2 className="loading">
+      <>
         Loading...
         <img
           src="https://icons8.com/preloaders/preloaders/1496/Spinner-5.gif"
           alt="spinner"
         />
-      </h2>
+      </>
     );
   }
 
