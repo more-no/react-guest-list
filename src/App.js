@@ -2,25 +2,25 @@ import './styles.css';
 import { useState, useEffect } from 'react';
 
 const baseUrl = 'http://localhost:4000';
-const responseFetch = await fetch(`${baseUrl}/guests`);
-const allGuests = await responseFetch.json();
 
 export default function App() {
   const [isLoading, setIsLoading] = useState(true);
   const [guestFirstName, setGuestFirstName] = useState('');
   const [guestLastName, setGuestLastName] = useState('');
-  const [guestList, setGuestList] = useState(allGuests);
+  const [guestList, setGuestList] = useState([]);
 
   /* ********** loading function ********** */
 
   useEffect(() => {
+    if (isLoading) {
+      <div className="loading">Loading...</div>;
+    }
     const firstRenderFetch = async () => {
       try {
         const responseLoading = await fetch('http://localhost:4000/guests');
         const data = await responseLoading.json();
 
         setGuestList(data);
-        setIsLoading(false);
       } catch (error) {
         console.log('Error first fetching: ', error);
         setIsLoading(false);
@@ -30,19 +30,7 @@ export default function App() {
     firstRenderFetch().catch((error) => {
       console.error('Error during initial fetch:', error);
     });
-  }, []); // triggers only on first render
-
-  if (isLoading) {
-    return (
-      <>
-        Loading...
-        <img
-          src="https://icons8.com/preloaders/preloaders/1496/Spinner-5.gif"
-          alt="spinner"
-        />
-      </>
-    );
-  }
+  }, [isLoading]); // triggers only on first render
 
   /* ********** end loading function ********** */
 
@@ -153,54 +141,60 @@ export default function App() {
   }
 
   return (
-    <div className="containerInput">
-      <div className="frame" data-test-id="guest">
-        <fieldset>
-          <legend>Add guest:</legend>
-          <label>
-            First name <br />
-            <input value={guestFirstName} onChange={handleInputFirstName} />
-          </label>
-          <br />
-          <br />
-          <label>
-            Last name <br />
-            <input
-              value={guestLastName}
-              onChange={handleInputLastName}
-              onKeyDown={enterNewGuest}
-            />
-          </label>
-          <br />
-          <br />
-        </fieldset>
+    <>
+      {/* <div>{isLoading && 'Loading...'}</div> */}
+      <div className="containerInput">
+        <div className="frame" data-test-id="guest">
+          <fieldset>
+            <legend>Add guest:</legend>
+            <label>
+              First name <br />
+              <input value={guestFirstName} onChange={handleInputFirstName} />
+            </label>
+            <br />
+            <br />
+            <label>
+              Last name <br />
+              <input
+                value={guestLastName}
+                onChange={handleInputLastName}
+                onKeyDown={enterNewGuest}
+              />
+            </label>
+            <br />
+            <br />
+          </fieldset>
+        </div>
+        <div className="listContainer">
+          <fieldset>
+            <legend>Guest List: </legend>
+            <div className="list">
+              {guestList.map((value) => (
+                <span key={`user-${value.id}`}>
+                  {value.firstName} {value.lastName}
+                  <br />
+                  <form>
+                    <label className="attending">
+                      Attending:{'     '}
+                      {JSON.stringify(value.attending)}
+                      <input
+                        type="checkbox"
+                        checked={value.attending}
+                        onChange={() => handleChangeStatus(value.id)}
+                      />
+                    </label>
+                  </form>
+                  <button onClick={() => removeGuest(value.id)}>
+                    {' '}
+                    Remove{' '}
+                  </button>
+                  <br />
+                </span>
+              ))}
+            </div>
+          </fieldset>
+        </div>
       </div>
-      <div className="listContainer">
-        <fieldset>
-          <legend>Guest List: </legend>
-          <div className="list">
-            {guestList.map((value) => (
-              <span key={`user-${value.id}`}>
-                {value.firstName} {value.lastName}
-                <br />
-                <form>
-                  <label className="attending">
-                    Attending:{'     '}
-                    {JSON.stringify(value.attending)}
-                    <input
-                      type="checkbox"
-                      checked={value.attending}
-                      onChange={() => handleChangeStatus(value.id)}
-                    />
-                  </label>
-                </form>
-                <button onClick={() => removeGuest(value.id)}> Remove </button>
-                <br />
-              </span>
-            ))}
-          </div>
-        </fieldset>
-      </div>
-    </div>
+    </>
   );
 }
