@@ -6,41 +6,43 @@ const responseFetch = await fetch(`${baseUrl}/guests`);
 const allGuests = await responseFetch.json();
 
 export default function App() {
-  // const [isLoading, setIsLoading] = useState(true);
-  // const [title, setTitle] = useState('Guest List App');
+  const [isLoading, setIsLoading] = useState(true);
   const [guestFirstName, setGuestFirstName] = useState('');
   const [guestLastName, setGuestLastName] = useState('');
-  const [guestAttending, setGuestAttending] = useState(false);
   const [guestList, setGuestList] = useState(allGuests);
 
-  // useEffect(() => {
-  //   async function firstRenderFetch() {
-  //     try {
-  //       response = await fetch('http://localhost:4000/guests');
-  //       const data = await response.json();
+  /* ********** inizio funzione loading ********** */
 
-  //       setGuestList(data);
-  //       // document.title = title;
-  //     } catch (error) {
-  //       console.log('Error first fetching: ', error);
-  //       setIsLoading(false);
-  //     }
-  //   }
+  useEffect(() => {
+    const firstRenderFetch = async () => {
+      try {
+        const responseLoading = await fetch('http://localhost:4000/guests');
+        const data = await responseLoading.json();
 
-  //   firstRenderFetch();
-  // }, []); // triggers only on first render
+        setGuestList(data);
+        setIsLoading(false);
+      } catch (error) {
+        console.log('Error first fetching: ', error);
+        setIsLoading(false);
+      }
+    };
 
-  // if (isLoading) {
-  //   return (
-  //     <h2 className="loading">
-  //       Loading...
-  //       <img
-  //         src="https://icons8.com/preloaders/preloaders/1496/Spinner-5.gif"
-  //         alt="spinner"
-  //       />
-  //     </h2>
-  //   );
-  // }
+    firstRenderFetch();
+  }, []); // triggers only on first render
+
+  if (isLoading) {
+    return (
+      <h2 className="loading">
+        Loading...
+        <img
+          src="https://icons8.com/preloaders/preloaders/1496/Spinner-5.gif"
+          alt="spinner"
+        />
+      </h2>
+    );
+  }
+
+  /* ********** fine funzione loading ********** */
 
   /* ********** inizio funzione add guest ********** */
 
@@ -74,43 +76,49 @@ export default function App() {
       },
     ];
 
+    setGuestList(updatedGuestList);
+    console.log('New guest created:', newGuest);
+
     // Reset the empty value in the input fields
     setGuestFirstName('');
     setGuestLastName('');
-    // Update the guestList
-    setGuestList(updatedGuestList);
-    console.log('New guest created:', newGuest);
   }
 
   /* ********** fine funzione add guest ********** */
 
   /* ********** inizio funzione change status ********** */
 
-  // async function handleChangeStatus(guestId) {
-  //   const updatedStatus = allGuests.map((guest) => {
-  //     if (guest.id === guestId) {
-  //       guest.attending = !guest.attending;
-  //     }
-  //   });
-  //   // Update the guest list locally
-  //   setGuestList(updatedStatus);
+  async function handleChangeStatus(id) {
+    // Find the guest in the guestList
+    const guestToUpdate = guestList.find((guest) => guest.id === id);
+    if (!guestToUpdate) return;
 
-  //   // Update the attendance on the server
-  //   const responseAttendance = await fetch(`${baseUrl}/guests/:${guestId}`, {
-  //     method: 'PUT',
-  //     headers: {
-  //       'Content-Type': 'application/json',
-  //     },
-  //     body: JSON.stringify({
-  //       attending: true,
-  //     }),
-  //   });
-  //   if (!responseAttendance.ok) {
-  //     throw new Error('Failed to update attendance on the server');
-  //   }
-  //   const updatedGuest = await responseAttendance.json();
-  //   setGuestAttending(updatedGuest);
-  // }
+    // Create the guest data with updated attendance status
+    const updatedGuest = {
+      ...guestToUpdate,
+      attending: !guestToUpdate.attending,
+    };
+
+    // Send a request to update the attending status in the API
+    const resUpdatedStatus = await fetch(`${baseUrl}/guests/${id}`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ attending: updatedGuest.attending }),
+    });
+
+    if (!resUpdatedStatus.ok) {
+      throw new Error('Failed to update attendance on the server');
+    }
+
+    // Update the guest's status locally
+    const updatedGuestList = guestList.map((guest) =>
+      guest.id === id ? updatedGuest : guest,
+    );
+
+    setGuestList(updatedGuestList);
+  }
 
   /* ********** fine funzione change status ********** */
 
@@ -139,6 +147,7 @@ export default function App() {
     });
 
     const deletedGuest = await responseDelete.json();
+    console.log(deletedGuest);
   }
 
   return (
@@ -178,13 +187,8 @@ export default function App() {
                     {JSON.stringify(value.attending)}
                     <input
                       type="checkbox"
-                      // 2. connect the state variables to the form fields
                       checked={value.attending}
-                      // 3. Update the state value with the event.currentTarget.checked
-                      onChange={(event) => {
-                        handleChangeStatus(value.id);
-                        // setGuestAttending(event.currentTarget.checked);
-                      }}
+                      onChange={(e) => handleChangeStatus(value.id)}
                     />
                   </label>
                 </form>
