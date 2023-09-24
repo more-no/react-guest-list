@@ -30,7 +30,7 @@ export default function App() {
     firstRenderFetch().catch((error) => {
       console.error('Error during initial fetch:', error);
     });
-  }, [isLoading]); // triggers only on first render
+  }, []); // triggers only on first render
 
   /* ********** end loading function ********** */
 
@@ -141,54 +141,60 @@ export default function App() {
   }
 
   return (
-    <div className="containerInput">
-      <div className="frame" data-test-id="guest">
-        <fieldset>
-          <legend>Add guest:</legend>
-          <label>
-            First name <br />
-            <input value={guestFirstName} onChange={handleInputFirstName} />
-          </label>
-          <br />
-          <br />
-          <label>
-            Last name <br />
-            <input
-              value={guestLastName}
-              onChange={handleInputLastName}
-              onKeyDown={enterNewGuest}
-            />
-          </label>
-          <br />
-          <br />
-        </fieldset>
+    <>
+      {isLoading && <p>Loading...</p>}
+      <div className="containerInput">
+        <div className="frame" data-test-id="guest">
+          <fieldset>
+            <legend>Add guest:</legend>
+            <label>
+              First name <br />
+              <input value={guestFirstName} onChange={handleInputFirstName} />
+            </label>
+            <br />
+            <br />
+            <label>
+              Last name <br />
+              <input
+                value={guestLastName}
+                onChange={handleInputLastName}
+                onKeyDown={enterNewGuest}
+              />
+            </label>
+            <br />
+            <br />
+          </fieldset>
+        </div>
+        <div className="listContainer">
+          <fieldset>
+            <legend>Guest List: </legend>
+            <div className="list">
+              {guestList.map((value) => (
+                <span key={`user-${value.id}`}>
+                  {value.firstName} {value.lastName}
+                  <br />
+                  <form>
+                    <label className="attending">
+                      Attending:{'     '}
+                      {JSON.stringify(value.attending)}
+                      <input
+                        type="checkbox"
+                        checked={value.attending}
+                        onChange={() => handleChangeStatus(value.id)}
+                      />
+                    </label>
+                  </form>
+                  <button onClick={() => removeGuest(value.id)}>
+                    {' '}
+                    Remove{' '}
+                  </button>
+                  <br />
+                </span>
+              ))}
+            </div>
+          </fieldset>
+        </div>
       </div>
-      <div className="listContainer">
-        <fieldset>
-          <legend>Guest List: </legend>
-          <div className="list">
-            {guestList.map((value) => (
-              <span key={`user-${value.id}`}>
-                {value.firstName} {value.lastName}
-                <br />
-                <form>
-                  <label className="attending">
-                    Attending:{'     '}
-                    {JSON.stringify(value.attending)}
-                    <input
-                      type="checkbox"
-                      checked={value.attending}
-                      onChange={() => handleChangeStatus(value.id)}
-                    />
-                  </label>
-                </form>
-                <button onClick={() => removeGuest(value.id)}> Remove </button>
-                <br />
-              </span>
-            ))}
-          </div>
-        </fieldset>
-      </div>
-    </div>
+    </>
   );
 }
