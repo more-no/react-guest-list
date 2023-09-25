@@ -2,8 +2,8 @@ import './styles.css';
 import { useState, useEffect } from 'react';
 
 const baseUrl = 'http://localhost:4000';
-// const responseFetch = await fetch(`${baseUrl}/guests`);
-// const allGuests = await responseFetch.json();
+const responseFetch = await fetch(`${baseUrl}/guests`);
+const allGuests = await responseFetch.json();
 
 export default function App() {
   const [isLoading, setIsLoading] = useState(true);
