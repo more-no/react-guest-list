@@ -181,6 +181,7 @@ export default function App() {
                     Attending:{'     '}
                     {JSON.stringify(value.attending)}
                     <input
+                      aria-label="attending"
                       type="checkbox"
                       checked={value.attending}
                       onChange={() => handleChangeStatus(value.id)}
