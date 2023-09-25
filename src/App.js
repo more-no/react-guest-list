@@ -1,13 +1,15 @@
 import './styles.css';
 import { useState, useEffect } from 'react';
 
-const baseUrl = 'express-guest-list-api-memory-data-store.more-no.repl.co';
+const baseUrl =
+  'https://express-guest-list-api-memory-data-store--more-no.repl.co';
 const responseFetch = await fetch(`${baseUrl}/guests`);
 const allGuests = await responseFetch.json();
 console.log(allGuests);
 
 export default function App() {
   const [displayText, setDisplayText] = useState('');
+  const [isLoading, setIsLoading] = useState(true);
   const [guestFirstName, setGuestFirstName] = useState('');
   const [guestLastName, setGuestLastName] = useState('');
   const [guestList, setGuestList] = useState([]);
@@ -18,15 +20,15 @@ export default function App() {
     setDisplayText('Loading..');
     const firstRenderFetch = async () => {
       try {
-        const responseLoading = await fetch(`${baseUrl} + /guests`);
-        // setIsLoading(false);
+        const responseLoading = await fetch(`${baseUrl}/guests`);
+        setIsLoading(false);
         setDisplayText('');
         const data = await responseLoading.json();
 
         setGuestList(data);
       } catch (error) {
         console.log('Error first fetching: ', error);
-        // setIsLoading(false);
+        setIsLoading(false);
         setDisplayText('');
       }
     };
@@ -142,6 +144,10 @@ export default function App() {
 
     const deletedGuest = await responseDelete.json();
     console.log(deletedGuest);
+  }
+
+  if (isLoading) {
+    return <div>Loading...</div>;
   }
 
   return (
