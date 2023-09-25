@@ -171,9 +171,9 @@ export default function App() {
       <div className="listContainer">
         <fieldset>
           <legend>Guest List: </legend>
-          <div className="list">
+          <div className="list" data-test-id="guest">
             {guestList.map((value) => (
-              <div data-test-id="guest" key={`user-${value.id}`}>
+              <span key={`user-${value.id}`}>
                 {value.firstName} {value.lastName}
                 <br />
                 <form>
@@ -189,7 +189,7 @@ export default function App() {
                 </form>
                 <button onClick={() => removeGuest(value.id)}> Remove </button>
                 <br />
-              </div>
+              </span>
             ))}
           </div>
         </fieldset>
