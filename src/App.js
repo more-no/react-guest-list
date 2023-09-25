@@ -19,10 +19,9 @@ export default function App() {
     const firstRenderFetch = async () => {
       try {
         const responseLoading = await fetch(`${baseUrl}/guests`);
-        setIsLoading(false);
         const data = await responseLoading.json();
-
         setGuestList(data);
+        setIsLoading(false);
       } catch (error) {
         console.log('Error first fetching: ', error);
         setIsLoading(false);
