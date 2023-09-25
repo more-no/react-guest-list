@@ -147,7 +147,7 @@ export default function App() {
 
   return (
     <div className="containerInput">
-      <div className="frame" data-test-id="guest">
+      <div className="frame">
         <fieldset>
           <legend>Add guest:</legend>
           <label>
@@ -171,7 +171,7 @@ export default function App() {
       <div className="listContainer">
         <fieldset>
           <legend>Guest List: </legend>
-          <div className="list">
+          <div className="list" data-test-id="guest">
             {guestList.map((value) => (
               <span key={`user-${value.id}`}>
                 {value.firstName} {value.lastName}
