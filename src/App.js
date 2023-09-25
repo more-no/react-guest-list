@@ -6,7 +6,7 @@ const responseFetch = await fetch(`${baseUrl}/guests`);
 const allGuests = await responseFetch.json();
 
 export default function App() {
-  const [isLoading, setIsLoading] = useState(true);
+  const [displayText, setDisplayText] = useState('');
   const [guestFirstName, setGuestFirstName] = useState('');
   const [guestLastName, setGuestLastName] = useState('');
   const [guestList, setGuestList] = useState([]);
@@ -14,16 +14,19 @@ export default function App() {
   /* ********** loading function ********** */
 
   useEffect(() => {
+    setDisplayText('Loading..');
     const firstRenderFetch = async () => {
       try {
         const responseLoading = await fetch('http://localhost:4000/guests');
-        setIsLoading(false);
+        // setIsLoading(false);
+        setDisplayText('');
         const data = await responseLoading.json();
 
         setGuestList(data);
       } catch (error) {
         console.log('Error first fetching: ', error);
-        setIsLoading(false);
+        // setIsLoading(false);
+        setDisplayText('');
       }
     };
 
@@ -142,7 +145,7 @@ export default function App() {
 
   return (
     <>
-      {isLoading && <p>Loading...</p>}
+      {displayText}
       <div className="containerInput">
         <div className="frame" data-test-id="guest">
           <fieldset>
