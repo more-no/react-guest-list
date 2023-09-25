@@ -1,7 +1,7 @@
 import './styles.css';
 import { useState, useEffect } from 'react';
 
-const baseUrl = 'http://localhost:4000';
+const baseUrl = 'express-guest-list-api-memory-data-store.more-no.repl.co';
 const responseFetch = await fetch(`${baseUrl}/guests`);
 const allGuests = await responseFetch.json();
 console.log(allGuests);
@@ -18,7 +18,7 @@ export default function App() {
     setDisplayText('Loading..');
     const firstRenderFetch = async () => {
       try {
-        const responseLoading = await fetch('http://localhost:4000/guests');
+        const responseLoading = await fetch(`${baseUrl} + /guests`);
         // setIsLoading(false);
         setDisplayText('');
         const data = await responseLoading.json();
