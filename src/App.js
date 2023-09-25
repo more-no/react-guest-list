@@ -3,9 +3,9 @@ import { useState, useEffect } from 'react';
 
 const baseUrl =
   'https://express-guest-list-api-memory-data-store--more-no.repl.co';
-const responseFetch = await fetch(`${baseUrl}/guests`);
-const allGuests = await responseFetch.json();
-console.log(allGuests);
+// const responseFetch = await fetch(`${baseUrl}/guests`);
+// const allGuests = await responseFetch.json();
+// console.log(allGuests);
 
 export default function App() {
   const [isLoading, setIsLoading] = useState(true);
