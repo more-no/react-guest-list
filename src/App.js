@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 const baseUrl = 'http://localhost:4000';
 const responseFetch = await fetch(`${baseUrl}/guests`);
 const allGuests = await responseFetch.json();
+console.log(allGuests);
 
 export default function App() {
   const [displayText, setDisplayText] = useState('');
