@@ -187,7 +187,10 @@ export default function App() {
                     />
                   </label>
                 </form>
-                <button onClick={() => removeGuest(value.id)}> Remove </button>
+                <button text="Remove" onClick={() => removeGuest(value.id)}>
+                  {' '}
+                  Remove{' '}
+                </button>
                 <br />
               </span>
             ))}
