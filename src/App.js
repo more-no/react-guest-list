@@ -3,9 +3,6 @@ import { useState, useEffect } from 'react';
 
 const baseUrl =
   'https://express-guest-list-api-memory-data-store--more-no.repl.co';
-// const responseFetch = await fetch(`${baseUrl}/guests`);
-// const allGuests = await responseFetch.json();
-// console.log(allGuests);
 
 export default function App() {
   const [isLoading, setIsLoading] = useState(true);
@@ -57,6 +54,7 @@ export default function App() {
     const newGuest = await responseGuest.json();
 
     // Update the local guest list with the newly created guest including the 'id'
+
     const updatedGuestList = [
       ...guestList,
       {
@@ -82,7 +80,6 @@ export default function App() {
   async function handleChangeStatus(id) {
     // Find the guest in the guestList
     const guestToUpdate = guestList.find((guest) => guest.id === id);
-    // if (!guestToUpdate) return;');
 
     // Create the guest data with updated attendance status
     const updatedGuest = {
@@ -111,7 +108,7 @@ export default function App() {
     setGuestList(updatedGuestList);
   }
 
-  /* ********** edn change status function ********** */
+  /* ********** end change status function ********** */
 
   const handleInputFirstName = (event) => {
     setGuestFirstName(event.target.value);
@@ -137,8 +134,22 @@ export default function App() {
       method: 'DELETE',
     });
 
-    const deletedGuest = await responseDelete.json();
-    console.log(deletedGuest);
+    await responseDelete.json();
+  }
+
+  async function removeAllGuests() {
+    try {
+      for (const guest of guestList) {
+        const deletedGuest = await fetch(`${baseUrl}/guests/${guest.id}`, {
+          method: 'DELETE',
+        });
+        console.log(deletedGuest);
+      }
+
+      setGuestList([]);
+    } catch (error) {
+      console.error('Error removing guests:', error);
+    }
   }
 
   if (isLoading) {
@@ -192,6 +203,12 @@ export default function App() {
                 <br />
               </div>
             ))}
+          </div>
+          <div className="removeAll">
+            <button onClick={() => removeAllGuests()}>
+              {' '}
+              Remove All Guests{' '}
+            </button>
           </div>
         </fieldset>
       </div>
